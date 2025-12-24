@@ -196,10 +196,13 @@ ul {
 
 /* Hero Section */
 .hero {
-    padding: 8rem 0 5rem;
+    padding: 10rem 0 6rem;
     background: linear-gradient(135deg, rgba(255, 111, 145, 0.1) 0%, rgba(255, 193, 214, 0.1) 100%);
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .hero .container {
@@ -784,10 +787,6 @@ ul {
 
 /* Responsive Styles */
 @media (max-width: 992px) {
-    .hero {
-        padding-top: 6rem;
-    }
-    
     .hero .container {
         flex-direction: column;
         text-align: center;
@@ -822,6 +821,19 @@ ul {
 }
 
 @media (max-width: 768px) {
+    /* Ajustes para la sección hero en móviles */
+    .hero {
+        padding-top: 8rem;
+        padding-bottom: 4rem;
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .hero .container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
     .header .container {
         padding: 0.8rem 1.5rem;
     }
@@ -883,18 +895,8 @@ ul {
 }
 
 @media (max-width: 576px) {
-    .hero {
-        padding-top: 7rem;
-        padding-bottom: 3rem;
-    }
-    
-    .hero .container {
-        min-height: auto;
-    }
-    
     .hero h1 {
         font-size: 2rem;
-        margin-top: 1rem;
     }
     
     .section-title {
