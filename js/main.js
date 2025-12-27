@@ -76,16 +76,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Formulario de contacto
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Obtener los valores del formulario
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const message = document.getElementById('message').value.trim();
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
             
             // Validación básica
+            const name = formData.get('name').trim();
+            const email = formData.get('email').trim();
+            const message = formData.get('message').trim();
+            
             if (!name || !email || !message) {
                 alert('Por favor, completa todos los campos obligatorios.');
                 return;
@@ -96,6 +99,41 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!emailRegex.test(email)) {
                 alert('Por favor, ingresa un correo electrónico válido.');
                 return;
+            }
+            
+            // Deshabilitar el botón para evitar envíos múltiples
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Enviando...';
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    // Mostrar mensaje de éxito
+                    alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+                    // Limpiar el formulario
+                    this.reset();
+                } else {
+                    const data = await response.json();
+                    if (data.errors) {
+                        alert('Hubo un error al enviar el formulario: ' + data.errors.map(error => error.message).join(', '));
+                    } else {
+                        alert('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo más tarde.');
+                    }
+                }
+            } catch (error) {
+                console.error('Error al enviar el formulario:', error);
+                alert('Hubo un error al enviar el formulario. Por favor, verifica tu conexión e inténtalo de nuevo.');
+            } finally {
+                // Restaurar el botón
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
             }
             
             // Aquí iría el código para enviar el formulario a un servidor
